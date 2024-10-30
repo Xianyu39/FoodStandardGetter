@@ -35,6 +35,6 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser()
-    with open("additivePage.html",'r') as f:
+    with open("./originPages/16.html",'r') as f:
         with open("test.html","w") as f1:
             f1.write(str(parser.ParseAdditiveAttrs(f.read())))
