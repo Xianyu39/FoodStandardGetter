@@ -72,7 +72,7 @@ class Scheduler:
 
         print(f"处理完毕，{len(failAdds)}个处理失败：")
         with open("failed.txt", "w") as f:
-            f.writelines(failAdds)
+            f.writelines([i+"\n" for i in failAdds])
 
         print("处理失败的添加剂信息写入到failed.txt中")
 
@@ -81,5 +81,7 @@ class Scheduler:
 if __name__ == "__main__":
     scheduler = Scheduler()
     scheduler.run()
+    import numpy as np
+    print(scheduler.additiveTb.iloc[:,-1].count())
 
         
