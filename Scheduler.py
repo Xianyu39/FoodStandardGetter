@@ -9,9 +9,9 @@ ROOT_ADDITIVE = "http://27602014.foodmate.net/index.php?m=additives&a=index"
 class Scheduler:
     def __init__(self) -> None:
         
-        self.foodTb = pd.DataFrame(
-            columns=["食品分类号", "食品名称", "食品描述",]
-        )
+        # self.foodTb = pd.DataFrame(
+        #     columns=["食品分类号", "食品名称", "食品描述",]
+        # )
         self.foodAdditiveTb = pd.DataFrame(
             columns=["食品分类号","INS"]
         )
@@ -21,11 +21,11 @@ class Scheduler:
         if os.listdir("originPages").count("additivePage.html") == 0:
             print("下载添加剂表成功")
             additivePage = downloader.Download(ROOT_ADDITIVE)
-            with open("./originPages/additivePage.html", "w") as f:
+            with open("additivePage.html", "w",encoding="utf-8") as f:
                 f.write(additivePage)
 
         parser = Parser()
-        with open("additivePage.html", "r") as f:
+        with open("additivePage.html", "r",encoding="utf-8") as f:
             addUrlList = parser.ParseAdditiveUrls(f.read())
 
         print("添加剂表处理完成")
@@ -34,30 +34,39 @@ class Scheduler:
             index=[i[0] for i in addUrlList],
         )
 
-        # 下载所需要的页面
-        fileNames = os.listdir("originPages")
-        if len(fileNames)==0:
-            for i,(addUrl,addName) in enumerate(addUrlList):
-                print(f"{i}.下载{addName}的资料")
-                page = downloader.Download(addUrl)
-                print(f"{i}.{addName}的资料下载成功")
-                with open(f"./originPages/{i}.html", "w") as f:
-                    f.write(page)
-
-            downloader.driver.quit()
+        # # 下载所需要的页面
+        # fileNames = os.listdir("originPages")
+        # if len(fileNames)==0:
+        #     for i,(addUrl,addName) in enumerate(addUrlList):
+        #         print(f"{i}.下载{addName}的资料")
+        #         page = downloader.Download(addUrl)
+        #         print(f"{i}.{addName}的资料下载成功")
+        #         with open(f"./originPages/{i}.html", "w", encoding="utf-8") as f:
+        #             f.write(page)
+        #
+        #     downloader.driver.quit()
 
         # 筛选信息
         failAdds=[]
         for i,(addUrl,addName) in enumerate(addUrlList):
-            with open(f"./originPages/{i}.html", "r") as f:
+            with open(f"./originPages/{i}.html", "r",encoding="utf-8") as f:
                 page = f.read()
                 try:
                     addRow,addRel = parser.ParseAdditiveAttrs(page)
                     for key,value in addRow.items():
                         self.additiveTb.loc[addUrl, key]=value
 
-                    addFoodTb=pd.DataFrame(data=addRel)
-                    addFoodTb.columns=["食品分类号","食品名称","最大使用量（g/kg）","备注"]
+                    # addFoodTb=pd.DataFrame(data=addRel)
+                    # addFoodTb.columns=["食品分类号","食品名称","最大使用量（g/kg）","备注"]
+                    # addFoodTb.to_excel(f"./food/{addName[:30]}.xlsx")
+                    # print(f"添加剂{addName}处理完成")
+
+
+                    # 动态确定列名
+                    max_columns = max(len(item) for item in addRel)
+                    columns = ["食品分类号", "食品名称", "最大使用量（g/kg）", "备注"][:max_columns]
+
+                    addFoodTb = pd.DataFrame(data=addRel, columns=columns)
                     addFoodTb.to_excel(f"./food/{addName[:30]}.xlsx")
                     print(f"添加剂{addName}处理完成")
 
@@ -68,10 +77,10 @@ class Scheduler:
 
 
         self.additiveTb.to_excel("AdditiveTable.xlsx")
-        self.foodTb.to_excel("FoodTable.xlsx")
+        # self.foodTb.to_excel("FoodTable.xlsx")
 
         print(f"处理完毕，{len(failAdds)}个处理失败：")
-        with open("failed.txt", "w") as f:
+        with open("failed.txt", "w",encoding="utf-8") as f:
             f.writelines([i+"\n" for i in failAdds])
 
         print("处理失败的添加剂信息写入到failed.txt中")
@@ -81,7 +90,7 @@ class Scheduler:
 if __name__ == "__main__":
     scheduler = Scheduler()
     scheduler.run()
-    import numpy as np
+    # import numpy as np
     print(scheduler.additiveTb.iloc[:,-1].count())
 
         

@@ -26,8 +26,15 @@ class Parser:
         rows = foodadd.select("tr")
         rows = rows[1:] # 去除第一行表头
         additivefoods = []
+        # for row in rows:
+        #     vals = [i.text for i in row.select("td")]
+        #     additivefoods.append(vals)
+
         for row in rows:
             vals = [i.text for i in row.select("td")]
+            # 检查是否为展开按钮，如果是则跳过
+            if not vals or vals[-1] == '[ + 展开 ]':
+                continue
             additivefoods.append(vals)
 
         return additiveRow, additivefoods
@@ -35,6 +42,6 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser()
-    with open("./originPages/16.html",'r') as f:
-        with open("test.html","w") as f1:
+    with open("additivePage250.html",'r',encoding="utf-8") as f:
+        with open("test250.html","w",encoding="utf-8") as f1:
             f1.write(str(parser.ParseAdditiveAttrs(f.read())))
