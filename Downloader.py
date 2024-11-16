@@ -30,8 +30,8 @@ class Downloader:
 
 if __name__ == "__main__":
     downloader = Downloader()
-    txt = downloader.Download("http://27602014.foodmate.net/index.php?m=additives&a=show&faid=1")
-    with open("additivePage.html", "w") as f:
+    txt = downloader.Download("http://27602014.foodmate.net/index.php?m=additives&a=show&faid=250")
+    with open("additivePage250.html", "w", encoding="utf-8") as f:
         f.write(txt)
 
     downloader.driver.quit()
