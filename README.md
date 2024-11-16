@@ -1,4 +1,9 @@
-# FoodStandardGetter
+结构：
+- food文件夹：文件名是食品添加剂名，内容是该食品添加剂在每个食品品类中的使用量限制
+- additiveTable.xlsx：食品添加剂表，包含食品添加剂的名称、标准来源等各种信息
+- FoodTable.xlsx：食品表，包含食品名称以及各种信息
+- 
+
 > [!WARN]牢底坐穿警告
 >> User-agent: *
 >>
